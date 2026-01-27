@@ -1,21 +1,28 @@
-import { createRouter, createWebHistory } from 'vue-router'
+// src/router/index.js
+import { createRouter, createWebHashHistory } from 'vue-router'
 
-// 使用 import() 懒加载方式，避免引用错误
 const routes = [
-  { 
-    path: '/', 
+  {
+    path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue') 
+    component: () => import('../views/Home.vue')
   },
-  { 
-    path: '/user', 
+  {
+    path: '/user',
     name: 'UserCenter',
-    component: () => import('../views/UserCenter.vue') 
+    component: () => import('../views/UserCenter.vue'),
+    meta: { requiresAuth: true }
+  },
+  // 【新增】保底路由：如果匹配不到路径（比如正好撞上 /Synesthesia/），自动跳回首页
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // 【关键修改】Hash 模式下，这里通常不需要传 base 路径
+  history: createWebHashHistory(), 
   routes
 })
 
